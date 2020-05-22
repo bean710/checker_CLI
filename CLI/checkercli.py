@@ -100,16 +100,20 @@ def check(projnum, tasknum, token):
         if (dat["status"] == "Done"):
             done = True
             checks = dat["result_display"]["checks"]
-            failed = False
+            gotOneWrong = False
             for check in checks:
                 if (check["passed"]):
-                    sentence_num = randint(0, len(pass_phrase) - 1)
-                    print("{}".format(pass_phrase[sentence_num]), end="") # checker pass
+                    print("\033[32my\033[0m", end="")
                 else:
-                    sentence_num = randint(0, len(fail_phrase) - 1)
-                    print("{}".format(fail_phrase[sentence_num]), end="") # checker fail
-                # cool animation launches here?
+                    gotOneWrong = True
+                    print("\033[31mn\033[0m", end="")
             print("")
+            if gotOneWrong:
+                    sentence_num = randint(0, len(fail_phrase) - 1)
+                    print("{}".format(fail_phrase[sentence_num])) # checker fail
+            else:
+                    sentence_num = randint(0, len(pass_phrase) - 1)
+                    print("{}".format(pass_phrase[sentence_num])) # checker pass
 
 if __name__ == "__main__":
     token = getToken()
