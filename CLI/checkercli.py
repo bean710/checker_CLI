@@ -61,6 +61,11 @@ def help():
     print("\tcheck <project_id> <task_num>\t: Checks a certain task")
     print("\t\tproject_id\t: The ID of the project that has the task to check")
     print("\t\ttask_num\t: The number of the task to check")
+    print("\t\t\033[1mColor Code:\033[0m (When getting project status)")
+    print("\t\t\t\033[0m\u2713/\u2717\t: Requirement check pass/fail")
+    print("\t\t\t\033[1;32m\u2713\033[0m/\033[1;31m\u2717\033[0m\t: Code check pass/fail")
+    print("\t\t\t\033[1;95m\u2713\033[0m/\033[1;93m\u2717\033[0m\t: Efficiency check pass/fail")
+    print("\t\t\t\033[1;34m\u2713\033[0m/\033[1;33m\u2717\033[0m\t: Text answer  pass/fail")
     print("")
     print("\trefresh\t: Prompts credential refresh")
     print("")
@@ -206,10 +211,10 @@ def check(projnum, tasknum, token):
                         print("\033[33;1m\u2717\033[0m", end="")
                 elif (label == "efficienct"):
                     if (check["passed"]):
-                        print("\033[34;1m\u2713\033[0m", end="")
+                        print("\033[95;1m\u2713\033[0m", end="")
                     else:
                         gotOneWrong = True
-                        print("\033[95;1m\u2717\033[0m", end="")
+                        print("\033[93;1m\u2717\033[0m", end="")
             print("")
             if gotOneWrong:
                 set_check(projnum, tasknum, "fail", token)
@@ -217,7 +222,7 @@ def check(projnum, tasknum, token):
                 print("{}".format(fail_phrase[sentence_num])) # checker fail
             else:
                 set_check(projnum, tasknum, "pass", token)
-                sentence_num = randint(0, len(pass_phrase) - 1)
+                sentence_num = randint(0, len(pass_phrase) - 1) 
                 print("{}".format(pass_phrase[sentence_num])) # checker pass
         else:
             # Randomly prints out a message that the checker is still running
