@@ -2,7 +2,7 @@
 import sys
 import os
 import requests
-import time
+from time import sleep
 from random import randint, uniform
 
 def getToken(refresh=False):
@@ -94,7 +94,7 @@ def check(projnum, tasknum, token):
     check_id = dat["id"]
     done = False
     while (not done):
-        time.sleep(1)
+        sleep(1)
         res = requests.get("https://intranet.hbtn.io/correction_requests/{}.json"\
                            .format(check_id),
                            params={"auth_token" : token})
