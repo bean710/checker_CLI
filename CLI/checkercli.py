@@ -5,6 +5,7 @@ import requests
 from time import sleep
 from random import randint, uniform
 
+
 def getToken(refresh=False):
     tfile = os.path.expanduser("~/.ccli/token")
     tok = ""
@@ -68,11 +69,11 @@ def help():
     print("")
 
 def check(projnum, tasknum, token):
-    pass_phrase = ["Dynomite!", "You’re Winner", "Achievement Obtained: Passed Checker", "Looks like a win-win-win situation", "Let’s hope the next task won’t be a trainwreck", "if you're not first, you're last - Ricky Bobby", "The checker has been defeated. Obtained: 98xp", "If Julien gave you a dollar for every check you got, how quickly on the road to bankruptcy would Julien be?", "Start practicing your happy dance; the checker approves of your code!", "Winning may not be everything, but as far as the checker is concerned it’s all that matters.", "forty-two"]
+    pass_phrase = ["Dynomite!", "You’re Winner", "Achievement Obtained: Passed Checker", "Looks like a win-win-win situation", "Let’s hope the next task won’t be a trainwreck", "if you're not first, you're last - Ricky Bobby", "The checker has been defeated. Obtained: 98xp", "If Julien gave you a dollar for every check you got, how quickly on the road to bankruptcy would Julien be?", "Start practicing your happy dance; the checker approves of your code!", "Winning may not be everything, but as far as the checker is concerned it’s all that matters.", "forty-two", "Checker-senpai noticed your code!", "What did the scouter say about your programming level? It's over Nine Thousand!", "*surprised Pikachu*"]
 
-    fail_phrase = ["Should have tested it before you pushed", "You miss all of the shots you don\’t take - Wayne Gretzky. - Michael Scott.", "Fission Mailed", "Abe Lincoln had a brighter future when he picked up his tickets at the box office", "It is possible to commit no mistakes and still lose", "Nice job failing it, hero", "Throw me a frickin' bone here!", "It’s okay to be imperfect. After all, I AM perfect", "Son of a nutcracker!", "Trying is the first step toward failure", "You're killing me, Smalls!", "You are Error"]
+    fail_phrase = ["Should have tested it before you pushed", "You miss all of the shots you don\’t take - Wayne Gretzky. - Michael Scott.", "Fission Mailed", "Abe Lincoln had a brighter future when he picked up his tickets at the box office", "It is possible to commit no mistakes and still lose", "Nice job failing it, hero", "Throw me a frickin' bone here!", "It’s okay to be imperfect. After all, I AM perfect", "Son of a nutcracker!", "Trying is the first step toward failure", "You're killing me, Smalls!", "You are Error", "Checker failed. Press F to pay respect.", "Even Cpt Jean-Luc Picard can't believe how much of an epic fail your code was.", "You have no idea what you're doing, do you?", "The checker may say you're wrong. But if it's of any consolation, the checker will never: give you up, let you down, run around and desert you, make you cry, say goodbye, tell a lie and hurt you"]
 
-    load_phrase = [" checking...", " testing...", " loading...", " running...", " failing...", " breaking...", " waiting..."]
+    load_phrase = [" checking your code...", " testing your code...", " loading your code...", " running your code...", " failing with your code...", " breaking your code...", " waiting for your code...", " destroying your code...", " working with your code...", " crashing your code...", " taking over the world with AI using your code...", " traumatizing Holberton School with your code...", " pinging Elon Musk with your code...", " flexing on New Haven with your code...", " creating an infinite loop with your code...", " leaking memory using your code...", " printing ASCII characters with your code...", " randomly putting in printf statements in your code...", " deleting your code from Github...", " deleting system32 using your code..."]
 
     res = requests.get("https://intranet.hbtn.io/projects/{}.json"\
                        .format(projnum),
@@ -117,11 +118,14 @@ def check(projnum, tasknum, token):
                     sentence_num = randint(0, len(pass_phrase) - 1)
                     print("{}".format(pass_phrase[sentence_num])) # checker pass
         else:
-            # Randomly prints out a message that the checker is still running
-            # one letter at a time, in random float delay in between
+            # Displays a progress bar with a randomly generated text
             num = randint(0, len(load_phrase) - 1)
-            string = "Now" + load_phrase[num]
+            string = "Now" + load_phrase[num] + " "
 
+            for i in progressbar(range(10), string, 40):
+                sleep(uniform(0.01, 0.5))
+
+            """
             for i in string:
                 print(i, end='')
                 sys.stdout.flush()
@@ -129,7 +133,23 @@ def check(projnum, tasknum, token):
 
             print("")
             sys.stdout.flush()
-            sleep(uniform(0.01, 0.5))
+            sleep(uniform(0.01, 0.5)) """
+
+
+def progressbar(length, prefix="", size=60, file=sys.stdout):
+    count = len(length)
+    # Create the progress bar
+    def show(j):
+        x = int(size*j/count)
+        file.write("%s[%s%s] %i/%i\r" % (prefix, "*"*x, "."*(size-x), j, count))
+        file.flush()        
+    show(0)
+    # Iterate through and fill the progress bar
+    for i, item in enumerate(length):
+        yield item
+        show(i+1)
+    file.write("\n")
+    file.flush()
 
 if __name__ == "__main__":
     token = getToken()
