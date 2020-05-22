@@ -36,32 +36,35 @@ def getToken(refresh=False):
         print (tok)
         return tok
 
+def help():
+    print("Help for Checker CLI:")
+    print("")
+    print("\033[1mCommands:\033[0m")
+    print("\tstatus <project_id> [task_num]\t: Gets the status of a "+
+          "certain project or task")
+    print("\t\tproject_id\t: The ID of the project to get the " +
+          "status of, or contains the task to get the status of")
+    print("\t\ttask_num\t: (Optional) The number of the task to " +
+          "get the status of")
+    print("")
+    print("\tcheck <project_id> <task_num>\t: Checks a certain task")
+    print("\t\tproject_id\t: The ID of the project that has the task to check")
+    print("\t\ttask_num\t: The number of the task to check")
+    print("")
+    print("\trefresh\t: Prompts credential refresh")
+    print("")
+    print("\trun\t: Pushes code and runs checker")
+    print("\t\t-d{n}\t: Dry mode. Runs checker for task `n` without " +
+          "pushing new code. Note: `n` should be the number next " +
+          "to the task, not the file prefix.")
+    print("")
+
 if __name__ == "__main__":
     token = getToken()
     if len(sys.argv) > 1:
         command = sys.argv[1]
         if (command in set(["-h", "--help"])):
-            print("Help for Checker CLI:")
-            print("")
-            print("\033[1mCommands:\033[0m")
-            print("\tstatus <project_id> [task_num]\t: Gets the status of a "+
-                  "certain project or task")
-            print("\t\tproject_id\t: The ID of the project to get the " +
-                  "status of, or contains the task to get the status of")
-            print("\t\ttask_num\t: (Optional) The number of the task to " +
-                  "get the status of")
-            print("")
-            print("\tcheck <project_id> <task_num>\t: Checks a certain task")
-            print("\t\tproject_id\t: The ID of the project that has the task to check")
-            print("\t\ttask_num\t: The number of the task to check")
-            print("")
-            print("\trefresh\t: Prompts credential refresh")
-            print("")
-            print("\trun\t: Pushes code and runs checker")
-            print("\t\t-d{n}\t: Dry mode. Runs checker for task `n` without " +
-                  "pushing new code. Note: `n` should be the number next " +
-                  "to the task, not the file prefix.")
-            print("")
+            help()
         elif (command == "run"):
             dry = -1
             if len(sys.argv) > 2:
@@ -137,7 +140,7 @@ if __name__ == "__main__":
                 check_id = dat["id"]
                 done = False
                 while (not done):
-                    time.sleep(5)
+                    time.sleep(1)
                     res = requests.get("https://intranet.hbtn.io/correction_requests/{}.json"\
                                        .format(check_id),
                                        params={"auth_token" : token})
@@ -157,3 +160,5 @@ if __name__ == "__main__":
             getToken(refresh=True)
         else:
             print("Run `checkercli --help` for help")
+    else:
+        help()
