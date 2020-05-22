@@ -66,6 +66,42 @@ def help():
     print("\t -h, --help\t: Shows this help output")
     print("")
 
+def check(projnum, tasknum, token):
+    res = requests.get("https://intranet.hbtn.io/projects/{}.json"\
+                       .format(projnum),
+                       params={"auth_token" : token})
+    if (not res or res.status_code != 200):
+        print("Error with the request. Try refreshing credentials.")
+        print(res)
+        print(res.json())
+        sys.exit(1)
+
+    dat = res.json()
+    task_id = dat["tasks"][int(tasknum)]["id"]
+    print("Checking task {} of project {}".format(tasknum,
+                                                  dat["name"]))
+    res = requests.post("https://intranet.hbtn.io/tasks/{}/start_correction.json"\
+                        .format(task_id),
+                        params={"auth_token" : token})
+    dat = res.json()
+    check_id = dat["id"]
+    done = False
+    while (not done):
+        time.sleep(1)
+        res = requests.get("https://intranet.hbtn.io/correction_requests/{}.json"\
+                           .format(check_id),
+                           params={"auth_token" : token})
+        dat = res.json()
+        if (dat["status"] == "Done"):
+            done = True
+            checks = dat["result_display"]["checks"]
+            for check in checks:
+                if (check["passed"]):
+                    print("\033[32my\033[0m", end="")
+                else:
+                    print("\033[31mn\033[0m", end="")
+            print("")
+
 if __name__ == "__main__":
     token = getToken()
     if len(sys.argv) > 1:
@@ -127,40 +163,7 @@ if __name__ == "__main__":
             if len(sys.argv) >= 4:
                 projnum = sys.argv[2]
                 tasknum = sys.argv[3]
-                res = requests.get("https://intranet.hbtn.io/projects/{}.json"\
-                                   .format(projnum),
-                                   params={"auth_token" : token})
-                if (not res or res.status_code != 200):
-                    print("Error with the request. Try refreshing credentials.")
-                    print(res)
-                    print(res.json())
-                    sys.exit(1)
-
-                dat = res.json()
-                task_id = dat["tasks"][int(tasknum)]["id"]
-                print("Checking task {} of project {}".format(tasknum,
-                                                              dat["name"]))
-                res = requests.post("https://intranet.hbtn.io/tasks/{}/start_correction.json"\
-                                    .format(task_id),
-                                    params={"auth_token" : token})
-                dat = res.json()
-                check_id = dat["id"]
-                done = False
-                while (not done):
-                    time.sleep(1)
-                    res = requests.get("https://intranet.hbtn.io/correction_requests/{}.json"\
-                                       .format(check_id),
-                                       params={"auth_token" : token})
-                    dat = res.json()
-                    if (dat["status"] == "Done"):
-                        done = True
-                        checks = dat["result_display"]["checks"]
-                        for check in checks:
-                            if (check["passed"]):
-                                print("\033[32my\033[0m", end="")
-                            else:
-                                print("\033[31mn\033[0m", end="")
-                        print("")
+                check(projnum, tasknum, token)
             else:
                 print("Not enough arguments. Run `checkercli --help`")
         elif (command == "refresh"):
@@ -169,3 +172,4 @@ if __name__ == "__main__":
             print("Run `checkercli --help` for help")
     else:
         help()
+
