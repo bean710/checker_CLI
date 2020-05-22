@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Checker CLI
 
 ##URL:https://youtu.be/mYIjqBE7I9o
@@ -40,3 +41,14 @@ Kenneth Fernandez - kenfernandezjr
 Ben Keener - bean710
 Robert Deprizio 
 Erika Caoili
+=======
+Requirements:
+---
+ - Python3
+
+Installation:
+---
+`git clone https://github.com/bean710/checker_CLI.git ~/CCLI`
+
+`alias ccli="python3 ~/CCLI/CLI/checkercli.py"`
+>>>>>>> e127230b514ac539f6b8ee36fbaeb37e0ba7fd39
