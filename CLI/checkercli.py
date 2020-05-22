@@ -19,13 +19,18 @@ def getToken(refresh=False):
         api_key = input("Please enter API key: ")
         email = input("Please enter your holberton email: ")
         password = input("Please enter your holberton password: ")
-        res = requests.post("https://intranet.hbtn.io/users/auth_token.json",
-                              json={
-                                "api_key": api_key,
-                                "email": email,
-                                "password": password,
-                                "scope": "checker"
-                              });
+        res = ""
+        try:
+            res = requests.post("https://intranet.hbtn.io/users/auth_token.json",
+                                  json={
+                                    "api_key": api_key,
+                                    "email": email,
+                                    "password": password,
+                                    "scope": "checker"
+                                  });
+        except TypeError:
+            print("CheckerCLI requires `requests` version 2.4.2 or later to run.")
+            print("Use `sudo pip3 install requests` to get it.")
         if not res or res.status_code != 200:
             print("Error authenticating. Please make sure your information is correct.")
             sys.exit(1)
