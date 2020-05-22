@@ -30,7 +30,7 @@ def getToken(refresh=False):
                                   });
         except TypeError:
             print("CheckerCLI requires `requests` version 2.4.2 or later to run.")
-            print("Use `sudo pip3 install requests` to get it.")
+            print("Use `sudo pip3 install --upgrade requests` to get it.")
         if not res or res.status_code != 200:
             print("Error authenticating. Please make sure your information is correct.")
             sys.exit(1)
@@ -109,7 +109,7 @@ if __name__ == "__main__":
                                        .format(projnum),
                                        params={"auth_token" : token})
                     if (not res or res.status_code != 200):
-                        print("Error with the request. Try refreshing credentials.")
+                        print("Error with the request. Your token may have expired.  Try refreshing credentials.")
                         print(res)
                         print(res.json())
                         sys.exit(1)
