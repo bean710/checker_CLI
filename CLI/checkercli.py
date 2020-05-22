@@ -61,7 +61,7 @@ def help():
     print("\tcheck <project_id> <task_num>\t: Checks a certain task")
     print("\t\tproject_id\t: The ID of the project that has the task to check")
     print("\t\ttask_num\t: The number of the task to check")
-    print("\t\t\033[1mColor Code:\033[0m (When getting project status)")
+    print("\t\t\033[1mColor Code:\033[0m")
     print("\t\t\t\033[0m\u2713/\u2717\t: Requirement check pass/fail")
     print("\t\t\t\033[1;32m\u2713\033[0m/\033[1;31m\u2717\033[0m\t: Code check pass/fail")
     print("\t\t\t\033[1;95m\u2713\033[0m/\033[1;93m\u2717\033[0m\t: Efficiency check pass/fail")
