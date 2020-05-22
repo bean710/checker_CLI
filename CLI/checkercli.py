@@ -17,8 +17,8 @@ def getToken(refresh=False):
         if not os.path.exists(os.path.expanduser("~/.ccli/")):
             os.mkdir(os.path.expanduser("~/.ccli/"))
         api_key = input("Please enter API key: ")
-        email = input("Please enter your Email: ")
-        password = input("Please enter your password: ")
+        email = input("Please enter your holberton email: ")
+        password = input("Please enter your holberton password: ")
         res = requests.post("https://intranet.hbtn.io/users/auth_token.json",
                               json={
                                 "api_key": api_key,
