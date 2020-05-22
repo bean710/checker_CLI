@@ -9,8 +9,8 @@ to make the checker experience less in intensive by bringing the experience stra
 This product will help you make dinner and wash your clothes...This will give you a response while pass or failed
 directly.
 
-=======
-Requirements:
+
+### Requirements:
 ---
  - Python3
  - requests 2.4.2 or later
@@ -18,11 +18,14 @@ ___
 
 ## Instructions
 
-Installation:
+### Installation:
 ---
-`git clone https://github.com/bean710/checker_CLI.git ~/CCLI`
-
-`alias ccli="python3 ~/CCLI/CLI/checkercli.py"`
+```
+git clone https://github.com/bean710/checker_CLI.git ~/CCLI
+```
+```
+alias ccli="python3 ~/CCLI/CLI/checkercli.py"
+```
 ___
 
 1.First use this command to get the repo into your terminate
