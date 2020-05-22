@@ -1,3 +1,7 @@
+Requirements:
+---
+ - Python3
+
 Installation:
 ---
 `git clone https://github.com/bean710/checker_CLI.git ~/CCLI`
