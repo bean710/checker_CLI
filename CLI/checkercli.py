@@ -100,7 +100,6 @@ def set_check(projnum, tasknum, status, token):
             sys.exit(1)
 
         dat = res.json()
-        print("\033[1m{}\033[0m".format(dat["name"]))
         for i in range(len(dat["tasks"])):
             task = dat["tasks"][i]
             task["cstatus"] = "not_checked"
@@ -189,16 +188,28 @@ def check(projnum, tasknum, token):
                 label = check["check_label"]
                 if (label == "requirement"):
                     if (check["passed"]):
-                        print("\033[32m\u2713\033[0m", end="")
+                        print("\033[0m\u2713\033[0m", end="")
                     else:
                         gotOneWrong = True
-                        print("\033[31m\u2717\033[0m", end="")
+                        print("\033[0m\u2717\033[0m", end="")
                 elif (label == "code"):
                     if (check["passed"]):
                         print("\033[32;1m\u2713\033[0m", end="")
                     else:
                         gotOneWrong = True
                         print("\033[31;1m\u2717\033[0m", end="")
+                elif (label == "answer"):
+                    if (check["passed"]):
+                        print("\033[34;1m\u2713\033[0m", end="")
+                    else:
+                        gotOneWrong = True
+                        print("\033[33;1m\u2717\033[0m", end="")
+                elif (label == "efficienct"):
+                    if (check["passed"]):
+                        print("\033[34;1m\u2713\033[0m", end="")
+                    else:
+                        gotOneWrong = True
+                        print("\033[95;1m\u2717\033[0m", end="")
             print("")
             if gotOneWrong:
                 set_check(projnum, tasknum, "fail", token)
