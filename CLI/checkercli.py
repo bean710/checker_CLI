@@ -152,7 +152,7 @@ def get_loc_status(projnum, token):
 def check(projnum, tasknum, token):
     pass_phrase = ["Dynomite!", "You’re Winner", "Achievement Obtained: Passed Checker", "Looks like a win-win-win situation", "Let’s hope the next task won’t be a trainwreck", "if you're not first, you're last - Ricky Bobby", "The checker has been defeated. Obtained: 98xp", "If Julien gave you a dollar for every check you got, how quickly on the road to bankruptcy would Julien be?", "Start practicing your happy dance; the checker approves of your code!", "Winning may not be everything, but as far as the checker is concerned it’s all that matters.", "forty-two"]
 
-    fail_phrase = ["Should have tested it before you pushed", "You miss all of the shots you don\’t take - Wayne Gretzky. - Michael Scott.", "Fission Mailed", "Abe Lincoln had a brighter future when he picked up his tickets at the box office", "It is possible to commit no mistakes and still lose", "Nice job failing it, hero", "Throw me a frickin' bone here!", "It’s okay to be imperfect. After all, I AM perfect", "Son of a nutcracker!", "Trying is the first step toward failure", "You're killing me, Smalls!", "You are Error"]
+    fail_phrase = ["Should have tested it before you pushed", "You miss all of the shots you don’t take - Wayne Gretzky. - Michael Scott.", "Fission Mailed", "Abe Lincoln had a brighter future when he picked up his tickets at the box office", "It is possible to commit no mistakes and still lose", "Nice job failing it, hero", "Throw me a frickin' bone here!", "It’s okay to be imperfect. After all, I AM perfect", "Son of a nutcracker!", "Trying is the first step toward failure", "You're killing me, Smalls!", "You are Error"]
 
     load_phrase = [" checking...", " testing...", " loading...", " running...", " failing...", " breaking...", " waiting..."]
 
@@ -186,11 +186,19 @@ def check(projnum, tasknum, token):
             checks = dat["result_display"]["checks"]
             gotOneWrong = False
             for check in checks:
-                if (check["passed"]):
-                    print("\033[32my\033[0m", end="")
-                else:
-                    gotOneWrong = True
-                    print("\033[31mn\033[0m", end="")
+                label = check["check_label"]
+                if (label == "requirement"):
+                    if (check["passed"]):
+                        print("\033[32m\u2713\033[0m", end="")
+                    else:
+                        gotOneWrong = True
+                        print("\033[31m\u2717\033[0m", end="")
+                elif (label == "code"):
+                    if (check["passed"]):
+                        print("\033[32;1m\u2713\033[0m", end="")
+                    else:
+                        gotOneWrong = True
+                        print("\033[31;1m\u2717\033[0m", end="")
             print("")
             if gotOneWrong:
                 set_check(projnum, tasknum, "fail", token)
