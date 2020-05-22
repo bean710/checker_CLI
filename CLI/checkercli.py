@@ -2,6 +2,7 @@
 import sys
 import os
 import requests
+import json
 from time import sleep
 from random import randint, uniform
 
@@ -56,6 +57,10 @@ def help():
     print("\tcheck <project_id> <task_num>\t: Checks a certain task")
     print("\t\tproject_id\t: The ID of the project that has the task to check")
     print("\t\ttask_num\t: The number of the task to check")
+    print("\t\t\033[1mColor Code:\033[0m (When getting project status)")
+    print("\t\t\t\033[0mWhite\t: Task has not been checked with CheckerCLI")
+    print("\t\t\t\033[31mGreen\033[0m\t: Task has passed all checks")
+    print("\t\t\t\033[32mRed\033[0m\t: Task has not passed all checks")
     print("")
     print("\trefresh\t: Prompts credential refresh")
     print("")
@@ -66,6 +71,83 @@ def help():
    # print("")
     print("\t -h, --help\t: Shows this help output")
     print("")
+
+def set_check(projnum, tasknum, status, token):
+    tasknum = int(tasknum)
+    try:
+        f = open(os.path.expanduser("~/.ccli/projects/{}".format(projnum)), "r")
+        dat = json.load(f)
+
+        dat["tasks"][tasknum]["cstatus"] = status
+
+        f.close()
+
+        f = open(os.path.expanduser("~/.ccli/projects/{}".format(projnum)), "w")
+        json.dump(dat, f)
+        f.close()
+
+    except FileNotFoundError:
+        if not os.path.exists(os.path.expanduser("~/.ccli/projects/")):
+            os.mkdir(os.path.expanduser("~/.ccli/projects"))
+        f = open(os.path.expanduser("~/.ccli/projects/{}".format(projnum)), "w")
+        res = requests.get("https://intranet.hbtn.io/projects/{}.json"\
+                           .format(projnum),
+                           params={"auth_token" : token})
+        if (not res or res.status_code != 200):
+            print("Error with the request. Try refreshing credentials.")
+            print(res)
+            print(res.json())
+            sys.exit(1)
+
+        dat = res.json()
+        print("\033[1m{}\033[0m".format(dat["name"]))
+        for i in range(len(dat["tasks"])):
+            task = dat["tasks"][i]
+            task["cstatus"] = "not_checked"
+
+        json.dump(dat, f)
+
+
+def get_loc_status(projnum, token):
+    try:
+        f = open(os.path.expanduser("~/.ccli/projects/{}".format(projnum)), "r")
+        dat = json.load(f)
+
+        print("\033[1m{}\033[0m".format(dat["name"]))
+        for i in range(len(dat["tasks"])):
+            task = dat["tasks"][i]
+            status = task["cstatus"]
+            if (status == "not_checked"):
+                color = "\033[0m"
+            elif (status == "fail"):
+                color = "\033[31m"
+            elif (status == "pass"):
+                color = "\033[32m"
+            else:
+                color = "\033[0m"
+            print("{}: {}{}\033[0m".format(i, color, task["title"]))
+    except FileNotFoundError:
+        if not os.path.exists(os.path.expanduser("~/.ccli/projects/")):
+            os.mkdir(os.path.expanduser("~/.ccli/projects"))
+        f = open(os.path.expanduser("~/.ccli/projects/{}".format(projnum)), "w")
+        res = requests.get("https://intranet.hbtn.io/projects/{}.json"\
+                           .format(projnum),
+                           params={"auth_token" : token})
+        if (not res or res.status_code != 200):
+            print("Error with the request. Try refreshing credentials.")
+            print(res)
+            print(res.json())
+            sys.exit(1)
+
+        dat = res.json()
+        print("\033[1m{}\033[0m".format(dat["name"]))
+        for i in range(len(dat["tasks"])):
+            task = dat["tasks"][i]
+            task["cstatus"] = "not_checked"
+            print("{}: {}".format(i, task["title"]))
+
+        json.dump(dat, f)
+
 
 def check(projnum, tasknum, token):
     pass_phrase = ["Dynomite!", "You’re Winner", "Achievement Obtained: Passed Checker", "Looks like a win-win-win situation", "Let’s hope the next task won’t be a trainwreck", "if you're not first, you're last - Ricky Bobby", "The checker has been defeated. Obtained: 98xp", "If Julien gave you a dollar for every check you got, how quickly on the road to bankruptcy would Julien be?", "Start practicing your happy dance; the checker approves of your code!", "Winning may not be everything, but as far as the checker is concerned it’s all that matters.", "forty-two"]
@@ -111,11 +193,13 @@ def check(projnum, tasknum, token):
                     print("\033[31mn\033[0m", end="")
             print("")
             if gotOneWrong:
-                    sentence_num = randint(0, len(fail_phrase) - 1)
-                    print("{}".format(fail_phrase[sentence_num])) # checker fail
+                set_check(projnum, tasknum, "fail", token)
+                sentence_num = randint(0, len(fail_phrase) - 1)
+                print("{}".format(fail_phrase[sentence_num])) # checker fail
             else:
-                    sentence_num = randint(0, len(pass_phrase) - 1)
-                    print("{}".format(pass_phrase[sentence_num])) # checker pass
+                set_check(projnum, tasknum, "pass", token)
+                sentence_num = randint(0, len(pass_phrase) - 1)
+                print("{}".format(pass_phrase[sentence_num])) # checker pass
         else:
             # Randomly prints out a message that the checker is still running
             # one letter at a time, in random float delay in between
@@ -154,19 +238,7 @@ if __name__ == "__main__":
             if len(sys.argv) > 2:
                 if len(sys.argv) == 3:
                     projnum = sys.argv[2]
-                    res = requests.get("https://intranet.hbtn.io/projects/{}.json"\
-                                       .format(projnum),
-                                       params={"auth_token" : token})
-                    if (not res or res.status_code != 200):
-                        print("Error with the request. Try refreshing credentials.")
-                        print(res)
-                        print(res.json())
-                        sys.exit(1)
-
-                    dat = res.json()
-                    print("\033[1m{}\033[0m".format(dat["name"]))
-                    for i in range(len(dat["tasks"])):
-                        print("{}: {}".format(i, dat["tasks"][i]["title"]))
+                    get_loc_status(projnum, token)
                 else:
                     projnum = sys.argv[2]
                     tasknum = sys.argv[3]
@@ -186,6 +258,7 @@ if __name__ == "__main__":
                         print("Checker is available for this task")
                     else:
                         print("Checker is not available for this task")
+
             else:
                 print("Not enough arguments. Run `checkercli --help`")
         elif (command == "check"):
