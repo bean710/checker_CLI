@@ -1,10 +1,11 @@
-<<<<<<< HEAD
+
 # Checker CLI
 
-## URL:https://youtu.be/mYIjqBE7I9o
+## Demo of our Checker CLI
+[DEMO](https://youtu.be/mYIjqBE7I9o)
 
-## About
-this application was created by a ragtag group of holberton students that wanted
+## Description
+This application was created by a ragtag group of Holberton students that wanted
 to make the checker experience less in intensive by bringing the experience straight to your console.
 This product will help you make dinner and wash your clothes...This will give you a response while pass or failed
 directly.
@@ -47,15 +48,17 @@ executable check numberofproject numberoftask
 ./checkercli.py check 309 1
 ```
 
-## explanation
+## Blog Post 
+We created a blog post to talk about the experience and how the Checker CLI works.
 
+Read it here, [The Checker CLI](https://medium.com/@erikacaoili/the-checker-hack-day-challenge-3a85c8b361db)
 
 ## Authors
 
-* Raudo Rivas Paulino -
+* Raudo Rivas Paulino - RaudoR
 * Anthony Louie - Alouie412
 * Kyle Campbell - waffle52
 * Kenneth Fernandez - kenfernandezjr
 * Ben Keener - bean710
-* Robert Deprizio
-* Erika Caoili
+* Robert Deprizio -  BD20171998
+* Erika Caoili - ecaoili24
