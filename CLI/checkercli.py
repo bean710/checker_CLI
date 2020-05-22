@@ -2,6 +2,7 @@
 import sys
 import os
 import requests
+import time
 
 def getToken(refresh=False):
     tfile = os.path.expanduser("~/.ccli/token")
@@ -47,8 +48,12 @@ if __name__ == "__main__":
                   "certain project or task")
             print("\t\tproject_id\t: The ID of the project to get the " +
                   "status of, or contains the task to get the status of")
-            print("\t\ttask_id\t: (Optional) The number of the task to " +
+            print("\t\ttask_num\t: (Optional) The number of the task to " +
                   "get the status of")
+            print("")
+            print("\tcheck <project_id> <task_num>\t: Checks a certain task")
+            print("\t\tproject_id\t: The ID of the project that has the task to check")
+            print("\t\ttask_num\t: The number of the task to check")
             print("")
             print("\trefresh\t: Prompts credential refresh")
             print("")
@@ -87,12 +92,65 @@ if __name__ == "__main__":
                     print("\033[1m{}\033[0m".format(dat["name"]))
                     for i in range(len(dat["tasks"])):
                         print("{}: {}".format(i, dat["tasks"][i]["title"]))
+                else:
+                    projnum = sys.argv[2]
+                    tasknum = sys.argv[3]
+                    res = requests.get("https://intranet.hbtn.io/projects/{}.json"\
+                                       .format(projnum),
+                                       params={"auth_token" : token})
+                    if (not res or res.status_code != 200):
+                        print("Error with the request. Try refreshing credentials.")
+                        print(res)
+                        print(res.json())
+                        sys.exit(1)
+
+                    dat = res.json()
+                    task = dat["tasks"][int(tasknum)]
+                    print("Task {}: \033[1m{}\033[0m".format(int(tasknum), task["title"]))
+                    if task["checker_available"]:
+                        print("Checker is available for this task")
+                    else:
+                        print("Checker is not available for this task")
             else:
                 print("Not enough arguments. Run `checkercli --help`")
         elif (command == "check"):
-            if len(sys.argv >= 4):
+            if len(sys.argv) >= 4:
                 projnum = sys.argv[2]
                 tasknum = sys.argv[3]
+                res = requests.get("https://intranet.hbtn.io/projects/{}.json"\
+                                   .format(projnum),
+                                   params={"auth_token" : token})
+                if (not res or res.status_code != 200):
+                    print("Error with the request. Try refreshing credentials.")
+                    print(res)
+                    print(res.json())
+                    sys.exit(1)
+
+                dat = res.json()
+                task_id = dat["tasks"][int(tasknum)]["id"]
+                print("Checking task {} of project {}".format(tasknum,
+                                                              dat["name"]))
+                res = requests.post("https://intranet.hbtn.io/tasks/{}/start_correction.json"\
+                                    .format(task_id),
+                                    params={"auth_token" : token})
+                dat = res.json()
+                check_id = dat["id"]
+                done = False
+                while (not done):
+                    time.sleep(5)
+                    res = requests.get("https://intranet.hbtn.io/correction_requests/{}.json"\
+                                       .format(check_id),
+                                       params={"auth_token" : token})
+                    dat = res.json()
+                    if (dat["status"] == "Done"):
+                        done = True
+                        checks = dat["result_display"]["checks"]
+                        for check in checks:
+                            if (check["passed"]):
+                                print("\033[32my\033[0m", end="")
+                            else:
+                                print("\033[31mn\033[0m", end="")
+                        print("")
             else:
                 print("Not enough arguments. Run `checkercli --help`")
         elif (command == "refresh"):
