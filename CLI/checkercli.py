@@ -100,6 +100,7 @@ def check(projnum, tasknum, token):
         if (dat["status"] == "Done"):
             done = True
             checks = dat["result_display"]["checks"]
+            failed = False
             for check in checks:
                 if (check["passed"]):
                     sentence_num = randint(0, len(pass_phrase) - 1)
