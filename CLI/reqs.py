@@ -1,3 +1,5 @@
+#This file contains the requirements for most of the other files
+
 import sys
 import os
 import requests

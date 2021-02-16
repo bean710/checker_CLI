@@ -16,6 +16,7 @@ if __name__ == "__main__":
         if (command in set(["-h", "--help"])):
             help()
         elif (command == "run"):
+            # Command used mostly for debugging
             dry = -1
             if len(sys.argv) > 2:
                 flag = sys.argv[2]
@@ -29,6 +30,7 @@ if __name__ == "__main__":
                 os.system("echo 'Replace this with git push code'")
             os.system("echo 'Replace this with checker API code'")
         elif (command == "status"):
+            # Get the results from the last time the task was checked, or check it if a task was specified
             if len(sys.argv) > 2:
                 if len(sys.argv) == 3:
                     projnum = sys.argv[2]
@@ -56,6 +58,7 @@ if __name__ == "__main__":
             else:
                 print("Not enough arguments. Run `checkercli --help`")
         elif (command == "check"):
+            # Check a project's task
             if len(sys.argv) >= 4:
                 projnum = sys.argv[2]
                 tasknum = sys.argv[3]
