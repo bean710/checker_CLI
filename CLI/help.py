@@ -24,10 +24,5 @@ def help():
     print("")
     print("\trefresh\t: Prompts credential refresh")
     print("")
-    #print("\trun\t: Pushes code and runs checker")
-   # print("\t\t-d{n}\t: Dry mode. Runs checker for task `n` without " +
-   #       "pushing new code. \n\t\t\t  Note: `n` should be the number next " +
-   #       "to the task, not the file prefix.")
-   # print("")
     print("\t -h, --help\t: Shows this help output")
     print("")
